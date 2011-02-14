@@ -1,21 +1,32 @@
-class Humm::StaticFiles < Sinatra::Base
-  use Rack::CommonLogger
-  
-  set :static, true
-  set :public, File.join( File.expand_path(File.dirname(__FILE__)), '../assets' )
-  
-  # Sanitize URL ending with a '/':
-  # 
-  get '*/' do
-    pass if params[:splat].first == ''
-    redirect params[:splat].first
+module Humm::StaticFiles
+    
+  def self.registered(app)
+    app.use Rack::CommonLogger
+    app.use Rack::Cache, :verbose => false
+    
+    app.register Mustache::Sinatra
+    app.set :mustache, {
+      :views     => File.join( File.expand_path(File.dirname(__FILE__)), '../views' ),
+      :templates => File.join( File.expand_path(File.dirname(__FILE__)), '../templates' ),
+      :namespace => Humm
+    }
+    
+    app.set :static, true
+    app.set :public, File.join( File.expand_path(File.dirname(__FILE__)), '../assets' )
+    
+    # Sanitize URL ending with a '/':
+    # 
+    app.get '*/' do
+      pass if params[:splat].first == ''
+      redirect params[:splat].first
+    end
+    
+    # Allways deliver THE HTML FILE (TM).
+    # Note that files lib/assets are served first.
+    # 
+    app.get '*' do
+      expires 3600, :public, :must_revalidate
+      mustache :index, :layout => false
+    end
   end
-  
-  # Allways deliver THE HTML FILE (TM).
-  # Note that files lib/assets are served first.
-  # 
-  get '*' do
-    send_file File.join( File.expand_path(File.dirname(__FILE__)), '../assets/index.html' )
-  end
-  
 end

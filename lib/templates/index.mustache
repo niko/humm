@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>HUMM!</title>
+  <title>Humm!</title>
   <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
   <script src='/jquery.min.js'></script>
   <script src="/jquery-ui.min.js"></script>
@@ -9,14 +9,13 @@
   <script src="/web-socket-js/FABridge.js"></script>
   <script src="/web-socket-js/web_socket.js"></script>
   <script>
-  var web_socket_port = 3333;
+  var websocket_server = "{{websocket_server}}";
+  var push_server = "{{push_server}}";
 
   WebSocket.__swfLocation = "web-socket-js/WebSocketMain.swf";
 
   open_ws = function(){
-    var loc = document.location;
-    var ws_host = loc.toString().replace('http:','ws:').replace( /:\d+\/.*/ , ":"+web_socket_port );
-    ws = new WebSocket(ws_host + loc.pathname);
+    ws = new WebSocket(websocket_server + document.location.pathname);
     ws.onmessage = on_message;
   };
 
@@ -27,7 +26,7 @@
   initialize_form = function(){
     $('#form').submit(function(submit){
       submit.preventDefault();
-      var url = document.location.protocol + '//' + document.location.hostname + ':3080' + $('#form #channel').val();
+      var url = push_server + $('#form #channel').val();
       var message = $('#form #message').val();
       $.post(url, { message: message });
     });
@@ -113,7 +112,7 @@
   <h1>Humm</h1>
   <h2>WebSocket service for the rest of us</h2>
 
-  <form id="form" action="http://localhost:3080" method="post" accept-charset="utf-8">
+  <form id="form" action="{{push_server}}" method="post" accept-charset="utf-8">
     <input type="text" name="channel" id="channel" value="/">
     <input type="text" name="message" id="message" value="have your say">
     <input type="submit" value="Push message">
@@ -146,11 +145,11 @@
         </div>
         <h4><a href="#cli">Command line access</a></h4>
         <div>
-          <pre><code>curl -i -X POST -d 'message=foobar' localhost:3080</code></pre>
+          <pre><code>curl -i -X POST -d 'message=foobar' {{push_server}}</code></pre>
         </div>
         <h4><a href="#channels">Understanding Humm channels</a></h4>
         <div>
-          <pre><code>curl -i -X POST -d 'message=foobar' localhost:3080/your/channel</code></pre>
+          <pre><code>curl -i -X POST -d 'message=foobar' {{push_server}}/your/channel</code></pre>
         </div>
     </div></div><!-- end #tutorial -->
     <div id="components"><div class="step_by_step">

@@ -1,0 +1,21 @@
+--- 
+:websocket_sever:
+  :port: 3333
+  :host: localhost
+  :listen: 0.0.0.0
+
+:push_server:
+  :port: 3080
+  :host: localhost
+  :listen: 0.0.0.0
+
+:static_files:
+  :port: 3000
+  :host: localhost
+  :listen: 0.0.0.0
+
+:policy_server: 
+  :port: 3843 # 843
+  :host: localhost
+  :listen: 0.0.0.0
+
