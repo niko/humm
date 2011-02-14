@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>HUMM!</title>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <script src='/jquery.min.js'></script>
+  <script src="/jquery-ui.min.js"></script>
+  <script src="/web-socket-js/swfobject.js"></script>
+  <script src="/web-socket-js/FABridge.js"></script>
+  <script src="/web-socket-js/web_socket.js"></script>
+  <script>
+  var web_socket_port = 3333;
+
+  WebSocket.__swfLocation = "web-socket-js/WebSocketMain.swf";
+
+  open_ws = function(){
+    var loc = document.location;
+    var ws_host = loc.toString().replace('http:','ws:').replace( /:\d+\/.*/ , ":"+web_socket_port );
+    ws = new WebSocket(ws_host + loc.pathname);
+    ws.onmessage = on_message;
+  };
+
+  on_message = function(msg){
+    $('#messages').append(msg.data).append('<br>');
+  };
+
+  initialize_form = function(){
+    $('#form').submit(function(submit){
+      submit.preventDefault();
+      var url = document.location.protocol + '//' + document.location.hostname + ':3080' + $('#form #channel').val();
+      var message = $('#form #message').val();
+      $.post(url, { message: message });
+    });
+    $('#form #channel').val(document.location.pathname);
+  };
+
+  $(function(){
+    open_ws();
+    initialize_form();
+    $(".step_by_step").accordion({ "navigation": true });
+    $("#tabs").tabs();
+  });
+  </script>
+  <style type="text/css" media="screen">
+  body {
+    font-family: Futura,"Century Gothic","URW Gothic L",Helvetica,sans-serif;
+  }
+  body, input {
+    color: #666;
+  }
+  h1{ font-size:1.4em; }
+  h2{ font-size:1.4em; }
+  h3{ font-size:1.1em; }
+  h4{ font-size:1.1em; }
+  h1, h2 { margin: 10px 20px; }
+  :focus {
+    outline: none;
+  }
+  #form {
+    border: 1px solid #666;
+    padding: 0.5em;
+    margin: 1em;
+  }
+  #messages {
+    border:1px solid #666;
+    padding: 0.5em;
+    margin: 1em;
+  }
+  .step_by_step {
+    margin: 1em;
+    border-bottom: 1px solid #666;
+  }
+  .step_by_step h4 {
+    border-top: 1px solid #666;
+    border-left: 1px solid #666;
+    border-right: 1px solid #666;
+    margin: 0px;
+    padding: 0.5em;
+  }
+  .step_by_step div {
+    border-left: 1px solid #666;
+    border-right: 1px solid #666;
+    margin: 0px;
+    padding: 0.5em;
+  }
+  #tabs ul {
+    margin: 0px 1em;
+    padding: 0px;
+    height: 2.5em;
+    border-top: 1px solid #666;
+    border-left: 1px solid #666;
+    border-right: 1px solid #666;
+  }
+  #tabs ul li {
+    display:block;
+    float:left;
+    padding:0.5em;
+    border-right: 1px solid #666;
+  }
+  #tabs h3 {
+    margin:0;
+  }
+  .ui-tabs-hide {
+    display: none;
+  }
+  code {
+    margin:0px 1em;
+    color:#333;
+  }
+  </style>
+</head>
+<body>
+  <h1>Humm</h1>
+  <h2>WebSocket service for the rest of us</h2>
+
+  <form id="form" action="http://localhost:3080" method="post" accept-charset="utf-8">
+    <input type="text" name="channel" id="channel" value="/">
+    <input type="text" name="message" id="message" value="have your say">
+    <input type="submit" value="Push message">
+  </form>
+
+  <div id="messages"></div>
+
+  <div id="tabs">
+    <ul>
+      <li><h3><a href="#tutorial">Tutorial</a></h3></li>
+      <li><h3><a href="#components">Components</a></h3></li>
+    </ul>
+    <div id="tutorial"><div class="step_by_step">
+        <h4><a href="#fast">Installation</a></h4>
+        <div>
+          <h5>Step 1 Install:</h5>
+          <pre><code>gem install humm</code></pre>
+          <h5>Step 2 Run:</h5>
+          <pre><code>humm</code></pre>
+          <h5>Step 3:</h5>
+          <p>There is no step 3. Well... actually, there is...</p>
+        </div>
+        <h4><a href="#fast">Fast success</a></h4>
+        <div>
+          <p>You've pushed the submit button above, haven't you? Then you should have seen your first WebSocket transmission already. Congratulations!</p>
+        </div>
+        <h4><a href="#rule">Let WebSockets rule</a></h4>
+        <div>
+          <p>Why don't you open another window of the browser...</p>
+        </div>
+        <h4><a href="#cli">Command line access</a></h4>
+        <div>
+          <pre><code>curl -i -X POST -d 'message=foobar' localhost:3080</code></pre>
+        </div>
+        <h4><a href="#channels">Understanding Humm channels</a></h4>
+        <div>
+          <pre><code>curl -i -X POST -d 'message=foobar' localhost:3080/your/channel</code></pre>
+        </div>
+    </div></div><!-- end #tutorial -->
+    <div id="components"><div class="step_by_step">
+        <h4><a href="#ws_server">The WebSocket server</a></h4>
+        <div>
+          blabla
+        </div>
+        <h4><a href="#ws_server">The push interface</a></h4>
+        <div>
+          Handling of cross domain AJAX requests by responding to the preflight HTTP OPTIONS request.
+        </div>
+        <h4><a href="#ws_server">The web server</a></h4>
+        <div>
+          <p>Humm includes a web server to deliver the necessary static files (javascript, the flash emulation for old browsers). In addition to that a single HTML may be given which will be delivered to all requests not matching any static file. That way the Humm channel can simply be chosen by the url if this file.
+        </div>
+        <h4><a href="#ws_server">The flash policy server</a></h4>
+        <div>
+          blabla
+        </div>
+    </div></div><!-- end #components -->
+  </div><!-- end #tabs -->
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>-</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    
+    <style type="text/css" media="screen">
+      html, body, #map_canvas { height:100%; padding:0; margin:0; }
+      #map_canvas { width: 100%; height:100%; }
+    </style>
+    
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+    <script type="text/javascript" src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/styledmarker/src/StyledMarker.js"></script>
+    
+    <script type="text/javascript">
+      function initialize() {
+        var latlng = new google.maps.LatLng(51,10);
+        var myOptions = {
+          zoom: 6,
+          center: latlng,
+          mapTypeId: google.maps.MapTypeId.TERRAIN
+        };
+        map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+      }
+    </script>
+    
+    
+    <script src='jquery.min.js'></script>
+
+    <script type="text/javascript" src="web-socket-js/swfobject.js"></script>
+    <script type="text/javascript" src="web-socket-js/FABridge.js"></script>
+    <script type="text/javascript" src="web-socket-js/web_socket.js"></script>
+    <script type="text/javascript">
+      WebSocket.__swfLocation = "web-socket-js/WebSocketMain.swf";
+
+      _open_ws = function(){
+        ws = new WebSocket(document.location.toString().replace('http:','ws:').replace(/:\d+\/.*/,":3333/"));
+        ws.onmessage = _on_message;
+        $(document).mousemove(function(e){ ws.send(e.pageX +','+ e.pageY); });
+      };
+
+      _on_message = function(evt){
+        msg = eval("("+ evt.data +")");
+        
+        var myLatLng = new google.maps.LatLng(msg.lat,msg.lng);
+        
+        var marker = new StyledMarker({
+          styleIcon:new StyledIcon(StyledIconTypes.BUBBLE, { color:msg.color, text:msg.label }),
+          position:new google.maps.LatLng(msg.lat, msg.lng),map:map
+        });
+        setTimeout(function(){ marker.setMap(null) },1000);
+        
+        var data = evt.data.split(',');
+        var i = data[0];
+        var x = parseInt(data[1],10);
+        var y = parseInt(data[2],10);
+      };
+
+      $(function(){
+        initialize();
+        _open_ws();
+      })
+    </script>
+  </head>
+  <body>
+    <div id="map_canvas"></div>
+  </body>
+</html>
