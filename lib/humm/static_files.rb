@@ -5,15 +5,15 @@ module Humm::StaticFiles
     app.use Rack::Cache, :verbose => false
     
     app.set :public, File.join( File.expand_path(File.dirname(__FILE__)), '../assets' )
-    app.set :views, app.index_path
-    
-    app.register Mustache::Sinatra
-    app.set :mustache, { :templates => app.index_path, :layout => false }
     
     app.set :index_full_path, Humm.config[:static_files][:index_full_path]
     app.set :index_path,      Humm.config[:static_files][:index_path]
     app.set :index_extension, Humm.config[:static_files][:index_extension]
     app.set :index_template,  Humm.config[:static_files][:index_template]
+    
+    app.register Mustache::Sinatra
+    app.set :views, app.index_path
+    app.set :mustache, { :templates => app.index_path, :layout => false }
     
     # Sanitize URL ending with a '/':
     # 
