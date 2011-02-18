@@ -38,5 +38,18 @@ module Humm
       Humm::FlashPolicyServer.run! Humm::Config.policy_server_conf
     end
     
+    def banner
+<<-EOB
+
+      ###########################################################
+      #               Welcome to Humm                           #
+      #                                                         #
+      # Why don't you go to the Webinterface and have a ride?   #
+      # #{Humm::Config.static_files_url}
+      ###########################################################
+
+EOB
+    end
+    
   end
 end

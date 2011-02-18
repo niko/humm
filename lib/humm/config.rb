@@ -18,7 +18,11 @@ module Humm::Config
           options[:static_files][:index_extension] = File.extname(file_path).gsub(/\A\./,'').to_sym
           options[:static_files][:index_template]  = File.basename(file_path, File.extname(file_path)).to_sym
         end
-      
+        
+        opts.on "-l", "--launch_browser", "Launch a browser with the webinterface" do |launch|
+          options[:static_files][:launch_browser] = true
+        end
+        
       end.parse!(args)
       
       options
@@ -48,6 +52,9 @@ module Humm::Config
     def push_and_static_same_port?
       config[:static_files][:port] == config[:push_server][:port]
     end
+    def static_files_url
+      "http://#{Humm::config[:static_files][:host]}:#{Humm::config[:static_files][:port]}"
+    end
   end
 end
 
@@ -59,4 +66,14 @@ Humm.config[:push_server].update      options[:push_server]
 Humm.config[:static_files].update     options[:static_files]
 Humm.config[:policy_server].update    options[:policy_server]
 
-p Humm.config
+puts Humm.config.inspect
+
+puts Humm.banner
+
+if Humm::config[:static_files][:launch_browser]
+  require 'launchy'
+  Thread.new {
+    sleep 1 # so the server is running
+    Launchy.open Humm::Config.static_files_url
+  }
+end
