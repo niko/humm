@@ -13,6 +13,9 @@
   :port: 3000
   :host: localhost
   :listen: 0.0.0.0
+  :index_path: lib/templates
+  :index_extension: :mustache
+  :index_template: :index
 
 :policy_server: 
   :port: 3843 # 843
