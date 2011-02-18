@@ -31,10 +31,13 @@
     <script type="text/javascript" src="web-socket-js/FABridge.js"></script>
     <script type="text/javascript" src="web-socket-js/web_socket.js"></script>
     <script type="text/javascript">
+      var websocket_server = "{{websocket_server}}";
+      var push_server = "{{push_server}}";
+      
       WebSocket.__swfLocation = "web-socket-js/WebSocketMain.swf";
 
       _open_ws = function(){
-        ws = new WebSocket(document.location.toString().replace('http:','ws:').replace(/:\d+\/.*/,":3333/"));
+        ws = new WebSocket(websocket_server + document.location.pathname);
         ws.onmessage = _on_message;
         $(document).mousemove(function(e){ ws.send(e.pageX +','+ e.pageY); });
       };
