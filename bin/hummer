@@ -1,0 +1,26 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'
+require 'net/http'
+require 'uri'
+
+class PushServer
+  def initialize
+    ps = `ps aux`
+    humm_ps_line = ps.split("\n").grep(/Humm/).first.strip
+    @server_url = humm_ps_line.split('::p::')[1]
+  end
+  
+  def post_message(channel, message)
+    res = Net::HTTP.post_form URI.parse("#{@server_url}#{channel}"), {'message'=>message}
+    puts res
+  end
+end
+
+channel = ARGV.shift if ARGV.first.match(%r{\A/.*})
+channel ||= '/'
+message = ARGV.join ' '
+
+ps = PushServer.new
+ps.post_message channel, message
+

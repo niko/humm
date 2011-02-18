@@ -55,6 +55,9 @@ module Humm::Config
     def static_files_url
       "http://#{Humm::config[:static_files][:host]}:#{Humm::config[:static_files][:port]}"
     end
+    def push_server_url
+      "http://#{Humm::config[:push_server][:host]}:#{Humm::config[:push_server][:port]}"
+    end
   end
 end
 
