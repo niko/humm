@@ -3,3 +3,21 @@
 $LOAD_PATH << File.join( File.expand_path(File.dirname(__FILE__)), '../lib' )
 
 require 'humm'
+
+puts Humm.config.inspect
+puts Humm.banner
+
+if Humm::config[:static_files][:launch_browser]
+  begin
+    require 'launchy'
+    Thread.new {
+      sleep 1 # so the server is running
+      Launchy.open Humm::Config.static_files_url
+    }
+  # rescue
+  end
+end
+
+EM.run do
+  Humm.run!
+end

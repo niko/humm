@@ -12,6 +12,8 @@ class PushServer
   end
   
   def post_message(channel, message)
+    puts "Posting #{message} to channel #{channel}."
+    puts "The equivalent "
     res = Net::HTTP.post_form URI.parse("#{@server_url}#{channel}"), {'message'=>message}
     puts res
   end

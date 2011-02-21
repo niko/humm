@@ -4,7 +4,15 @@ module Humm
   class << self
     
     def config
-      Config.load
+      return @config if @config
+      
+      @config = Config.load
+      options = Config.parse_command_line_opts ARGV
+      
+      @config[:websocket_sever].update  options[:websocket_sever]
+      @config[:push_server].update      options[:push_server]
+      @config[:static_files].update     options[:static_files]
+      @config[:policy_server].update    options[:policy_server]
     end
     
     def push_app  ; Class.new(Sinatra::Base){register Humm::PushInterface}; end

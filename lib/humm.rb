@@ -16,7 +16,3 @@ require 'humm/static_files'
 require 'humm/push_interface'
 require 'humm/flash_policy_server'
 require 'humm/websocket_server'
-
-EM.run do
-  Humm.run!
-end

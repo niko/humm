@@ -28,23 +28,29 @@ module Humm::Config
       options
     end
     
-    def load
-      return @config if @config
-      
-      @config = YAML::load( File.open( File.join( File.expand_path(File.dirname(__FILE__)), '../defaults.yaml' ) ) )
-      @config[:websocket_sever][:listen]  ||= @config[:websocket_sever][:host]
-      @config[:push_server][:listen]      ||= @config[:push_server][:host]
-      @config[:static_files][:listen]     ||= @config[:static_files][:host]
-      @config[:policy_server][:listen]    ||= @config[:policy_server][:host]
-      
-      @config
+    def load(yaml_file=nil)
+      yaml = File.open(yaml_file || File.join(base_path, 'defaults.yaml'))
+      config = YAML::load yaml
+      @config = set_listen_host!(config)
     end
     
-    def websocket_conf;     { :host => config[:websocket_sever][:listen], :port => config[:websocket_sever][:port]  }; end
-    def push_server_conf;   { :host => config[:push_server][:listen]    , :port => config[:push_server][:port]      }; end
-    def static_files_conf;  { :host => config[:static_files][:listen]   , :port => config[:static_files][:port]     }; end
-    def policy_server_conf; { :host => config[:policy_server][:listen]  , :port => config[:policy_server][:port]    }; end
-    def push_and_static_conf; { :host => push_and_static_common_host    , :port => push_server_conf[:port]          }; end
+    def base_path
+      File.join( File.expand_path(File.dirname(__FILE__)), '..' )
+    end
+    
+    def set_listen_host!(conf)
+      conf[:websocket_sever][:listen]  ||= conf[:websocket_sever][:host]
+      conf[:push_server][:listen]      ||= conf[:push_server][:host]
+      conf[:static_files][:listen]     ||= conf[:static_files][:host]
+      conf[:policy_server][:listen]    ||= conf[:policy_server][:host]
+      return conf
+    end
+    
+    def websocket_conf;       { :host => config[:websocket_sever][:listen], :port => config[:websocket_sever][:port]  }; end
+    def push_server_conf;     { :host => config[:push_server][:listen]    , :port => config[:push_server][:port]      }; end
+    def static_files_conf;    { :host => config[:static_files][:listen]   , :port => config[:static_files][:port]     }; end
+    def policy_server_conf;   { :host => config[:policy_server][:listen]  , :port => config[:policy_server][:port]    }; end
+    def push_and_static_conf; { :host => push_and_static_common_host      , :port => push_server_conf[:port]          }; end
     
     def push_and_static_common_host
       static_files_conf[:host] == push_server_conf[:host] ? push_server_conf[:host] : '0.0.0.0'
@@ -61,22 +67,3 @@ module Humm::Config
   end
 end
 
-Humm.config
-options = Humm::Config.parse_command_line_opts ARGV
-
-Humm.config[:websocket_sever].update  options[:websocket_sever]
-Humm.config[:push_server].update      options[:push_server]
-Humm.config[:static_files].update     options[:static_files]
-Humm.config[:policy_server].update    options[:policy_server]
-
-puts Humm.config.inspect
-
-puts Humm.banner
-
-if Humm::config[:static_files][:launch_browser]
-  require 'launchy'
-  Thread.new {
-    sleep 1 # so the server is running
-    Launchy.open Humm::Config.static_files_url
-  }
-end

@@ -109,8 +109,7 @@
   </style>
 </head>
 <body>
-  <h1>Humm</h1>
-  <h2>WebSocket service for the rest of us</h2>
+  <h1>Humm - WebSocket service for the rest of us</h1>
 
   <form id="form" action="{{push_server}}" method="post" accept-charset="utf-8">
     <input type="text" name="channel" id="channel" value="/">
@@ -145,6 +144,9 @@
         </div>
         <h4><a href="#cli">Command line access</a></h4>
         <div>
+          <p>The easiest (given you're on the same host as the Humm server) would be to use the provided command line tool, 'hummer':</p>
+          <pre><code>./bin/hummer message</code></pre>
+          <p>Or you just use curl:</p>
           <pre><code>curl -i -X POST -d 'message=foobar' {{push_server}}</code></pre>
         </div>
         <h4><a href="#channels">Understanding Humm channels</a></h4>
