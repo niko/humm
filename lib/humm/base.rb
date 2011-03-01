@@ -24,7 +24,7 @@ module Humm
     end
     
     def run_http_interfaces!
-      $0 = "Humm ::p::#{Humm::Config.push_server_url}::p:: ::s::#{Humm::Config.static_files_url}::s::"
+      $0 = ".:Humm:. WS #{Humm::Config.websocket_url} PUSH #{Humm::Config.push_server_url} STATIC #{Humm::Config.static_files_url} POLICY #{Humm::Config.policy_server_url}"
       
       if Config.push_and_static_same_port?
         puts "== Push interface and static file server listening on #{push_and_static_conf[:host]}:#{push_and_static_conf[:port]}"

@@ -29,8 +29,8 @@ module Humm::StaticFiles
       expires 3600, :public, :must_revalidate
       
       locals = {
-        :websocket_server => "ws://#{Humm::config[:websocket_sever][:host]}:#{Humm::config[:websocket_sever][:port]}",
-        :push_server      => "http://#{Humm::config[:push_server][:host]}:#{Humm::config[:push_server][:port]}",
+        :websocket_server => Humm::Config.websocket_url,
+        :push_server      => Humm::Config.push_server_url,
         :config           => Humm::config
       }
       

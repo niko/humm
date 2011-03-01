@@ -58,11 +58,18 @@ module Humm::Config
     def push_and_static_same_port?
       config[:static_files][:port] == config[:push_server][:port]
     end
-    def static_files_url
-      "http://#{Humm::config[:static_files][:host]}:#{Humm::config[:static_files][:port]}"
+    
+    def websocket_url
+      "ws://#{config[:websocket_sever][:host]}:#{config[:websocket_sever][:port]}"
     end
     def push_server_url
-      "http://#{Humm::config[:push_server][:host]}:#{Humm::config[:push_server][:port]}"
+      "http://#{config[:push_server][:host]}:#{config[:push_server][:port]}"
+    end
+    def static_files_url
+      "http://#{config[:static_files][:host]}:#{config[:static_files][:port]}"
+    end
+    def policy_server_url
+      "http://#{config[:policy_server][:host]}:#{config[:policy_server][:port]}"
     end
   end
 end

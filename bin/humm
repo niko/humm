@@ -7,6 +7,8 @@ require 'humm'
 puts Humm.config.inspect
 puts Humm.banner
 
+p Humm::config
+
 if Humm::config[:static_files][:launch_browser]
   begin
     require 'launchy'

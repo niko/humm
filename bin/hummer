@@ -7,14 +7,22 @@ require 'uri'
 class PushServer
   def initialize
     ps = `ps aux`
-    humm_ps_line = ps.split("\n").grep(/Humm/).first.strip
-    @server_url = humm_ps_line.split('::p::')[1]
+    
+    humm_line = ps.split("\n").grep(/\.:Humm:\./).first
+    h_conf_line = humm_line.split(/\s\.:Humm:\.\s/).last
+    h_conf = Hash[*h_conf_line.split]
+    
+    # {"WS"=>"ws://localhost:3333", "PUSH"=>"http://localhost:3080", "STATIC"=>"http://localhost:3000", "POLICY"=>"http://localhost:3843"}
+    @websocket_url    = h_conf['WS']
+    @push_server_url  = h_conf['PUSH']
+    @static_files_url = h_conf['STATIC']
+    @policy_url       = h_conf['POLICY']
   end
   
   def post_message(channel, message)
     puts "Posting #{message} to channel #{channel}."
     puts "The equivalent "
-    res = Net::HTTP.post_form URI.parse("#{@server_url}#{channel}"), {'message'=>message}
+    res = Net::HTTP.post_form URI.parse("#{@push_server_url}#{channel}"), {'message'=>message}
     puts res
   end
 end
