@@ -11,6 +11,7 @@ require 'rack/cache'
 require 'optparse'
 
 require 'humm/base'
+require 'humm/channels'
 require 'humm/config'
 require 'humm/static_files'
 require 'humm/push_interface'

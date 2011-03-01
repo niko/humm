@@ -1,5 +1,4 @@
 module Humm
-  CHANNELS = HeavyHash.new
   
   class << self
     

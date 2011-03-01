@@ -4,12 +4,6 @@ module Humm::PushInterface
   def self.registered(app)
     app.use Rack::CommonLogger
     
-    app.helpers do
-      def clients_for(path)
-        Humm::CHANNELS.path(path).parents_content(true)
-      end
-    end
-    
     app.use Rack::Cors do |cfg|
       cfg.allow do |allow|
         allow.origins '*'
@@ -23,8 +17,9 @@ module Humm::PushInterface
       channel = params[:splat].first
       puts "received message on channel #{channel}"
       
-      clients = clients_for(channel)
+      clients = Humm::Channels.clients_for channel
       clients.each do |connection|
+        puts "connection.send #{message}"
         connection.send message
       end
       
