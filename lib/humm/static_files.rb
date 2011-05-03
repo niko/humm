@@ -1,5 +1,11 @@
+module Humm
+  module Views
+    class Index < Mustache; end
+  end
+end
+
 module Humm::StaticFiles
-    
+  
   def self.registered(app)
     app.use Rack::CommonLogger
     app.use Rack::Cache, :verbose => false
@@ -12,8 +18,7 @@ module Humm::StaticFiles
     app.set :index_template,  Humm.config[:static_files][:index_template]
     
     app.register Mustache::Sinatra
-    app.set :views, app.index_path
-    app.set :mustache, { :templates => app.index_path, :layout => false }
+    app.set :mustache, { :views => app.index_path, :templates => app.index_path, :layout => false, :namespace => Humm }
     
     # Sanitize URL ending with a '/':
     # 
