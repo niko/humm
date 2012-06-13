@@ -29,7 +29,12 @@ module Humm::Config
     end
     
     def load(yaml_file=nil)
-      yaml = File.open(yaml_file || File.join(base_path, 'defaults.yaml'))
+      begin
+        yaml = File.open(yaml_file || File.join(base_path, 'defaults.yaml'))
+      rescue Errno::ENOENT
+        yaml = File.open(File.join(base_path, 'defaults.yaml'))
+      end
+      
       config = YAML::load yaml
       @config = set_listen_host!(config)
     end

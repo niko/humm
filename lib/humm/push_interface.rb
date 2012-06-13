@@ -23,7 +23,7 @@ module Humm::PushInterface
         connection.send message
       end
       
-      "Sent #{message} to #{clients.size} clients: #{clients.map{|c| c.request['Path']}.inspect}"
+      "Sent #{message} to #{clients.size} clients: #{clients.map{|c| c.request['path']}.inspect}"
     end
   end
 end

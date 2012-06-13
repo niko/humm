@@ -15,7 +15,7 @@ describe Humm::PushInterface do
         post '/gets/the/clients/from/the/CHANNELS', :message => 'foobar'
       end
       it "sends the message to all clients" do
-        client = stub(:client, :request => {'Path' => '/'})
+        client = stub(:client, :request => {'path' => '/'})
         client.should_receive(:send).with('foobar')
         Humm::Channels.stub! :clients_for => [client]
         post '/sends/the/message/to/all/clients', :message => 'foobar'

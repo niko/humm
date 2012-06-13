@@ -5,7 +5,7 @@ module Humm
     def config
       return @config if @config
       
-      @config = Config.load
+      @config = Config.load ARGV[0]
       options = Config.parse_command_line_opts ARGV
       
       @config[:websocket_sever].update  options[:websocket_sever]

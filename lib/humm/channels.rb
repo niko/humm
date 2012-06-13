@@ -10,13 +10,13 @@ class Humm::Channels
     end
     
     def add_client(client)
-      path = client.request['Path']
-      puts "WebSocket client connected on channel #{path}."
+      path = client.request['path']
+      puts "WebSocket client connected on channel #{path.inspect}."
       channels.path(path) << client                                                                                                               
     end
     
     def remove_client(client)
-      if path = client.request['Path']
+      if path = client.request['path']
         puts "WebSocket client disconnected from channel #{path}."
         channels.path(path).remove client                                                                                                                      
       end
