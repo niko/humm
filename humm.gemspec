@@ -23,4 +23,6 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'haml'
   s.add_runtime_dependency 'heavy_hash'
   s.add_runtime_dependency 'rack'
+  s.add_runtime_dependency 'rack-cache'
+  s.add_runtime_dependency 'rack-cors'
 end
