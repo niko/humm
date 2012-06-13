@@ -10,7 +10,7 @@ module Humm::StaticFiles
     app.use Rack::CommonLogger
     app.use Rack::Cache, :verbose => false
     
-    app.set :public, File.join( File.expand_path(File.dirname(__FILE__)), '../assets' )
+    app.set :public_folder, File.join( File.expand_path(File.dirname(__FILE__)), '../assets' )
     
     app.set :index_full_path, Humm.config[:static_files][:index_full_path]
     app.set :index_path,      Humm.config[:static_files][:index_path]
